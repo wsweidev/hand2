@@ -98,7 +98,7 @@ const Home: NextPage = () => {
                     Powered by{" "}
                     <span className={styles.logo}>
                         <Image
-                            src="/vercel.svg"
+                            src="/favicon.ico"
                             alt="Vercel Logo"
                             width={72}
                             height={16}
