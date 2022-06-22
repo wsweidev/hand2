@@ -3,14 +3,12 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
   provider             = "mysql"
   url                  = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
-  // shadowDatabaseUrl = env("SHADOW_URL")
+  shadowDatabaseUrl = env("SHADOW_URL")
 }
 
 model Comment {
