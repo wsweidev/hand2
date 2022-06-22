@@ -17,6 +17,19 @@ model Example {
     id String @id @default(cuid())
 }
 
+model Product {
+    id          String @id @default(cuid())
+    name        String
+    currency    String
+    price       Float
+    salePrice   Float?
+    flag        String?
+    imageUrl    String
+    rating      Int
+    ratingCount Int
+    description String
+}
+
 model Comment {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())

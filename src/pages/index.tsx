@@ -13,14 +13,33 @@ import {
 } from "@chakra-ui/react";
 import { trpc } from "../utils/trpc";
 import { ChangeEvent, useState } from "react";
+import { ProductGrid } from "@src/components/ProductGrid";
+import { ProductCard } from "@src/components/ProductCard";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 const Home: NextPage = () => {
-    const [value, setValue] = useState("");
-    const commentMutation = trpc.useMutation(["example.add-comment"]);
+    const { data: session, status } = useSession();
+    console.log(session);
 
-    const submitComment = () => {
-        commentMutation.mutate({ comment: value });
-    };
+    const [value, setValue] = useState("");
+    const products = trpc.useQuery(["example.getProducts"]);
+    // const productMutation = trpc.useMutation(["example.add-product"]);
+
+    // const submitComment = () => {
+    //     productMutation.mutate({
+    //         id: "3",
+    //         name: "Marble Leather",
+    //         currency: "USD",
+    //         price: 199,
+    //         imageUrl:
+    //             "https://images.unsplash.com/photo-1564594985645-4427056e22e2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80",
+    //         rating: 4,
+    //         ratingCount: 12,
+    //         description:
+    //             "With a sleek design and a captivating essence, this is a modern Classic made for every occasion.",
+    //     });
+    // };
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setValue(event.target.value);
@@ -37,75 +56,29 @@ const Home: NextPage = () => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <main className={styles.main}>
-                <Stack direction="column">
-                    <Box
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                        width="100%"
-                        py={12}
-                        bgImage="url('https://bit.ly/2Z4KKcF')"
-                        bgPosition="center"
-                        bgRepeat="no-repeat"
-                        mb={2}
-                    >
-                        <ButtonGroup gap="4">
-                            <Button colorScheme="whiteAlpha">WhiteAlpha</Button>
-                            <Button colorScheme="blackAlpha">BlackAlpha</Button>
-                        </ButtonGroup>
-                    </Box>
+            {/* <Button onClick={submitComment} size="lg" colorScheme={"blue"} /> */}
+            {status === "authenticated" ? (
+                <p>Signed in as {session.user?.email}</p>
+            ) : (
+                <Link href="/api/auth/signin">Sign in</Link>
+            )}
 
-                    <Wrap spacing={4}>
-                        <WrapItem>
-                            <Button colorScheme="gray">Gray</Button>
-                        </WrapItem>
-                        <WrapItem>
-                            <Button colorScheme="red">Red</Button>
-                        </WrapItem>
-                        <WrapItem>
-                            <Button colorScheme="orange">Orange</Button>
-                        </WrapItem>
-                        <WrapItem>
-                            <Button colorScheme="yellow">Yellow</Button>
-                        </WrapItem>
-                        <WrapItem>
-                            <Button colorScheme="green">Green</Button>
-                        </WrapItem>
-                        <WrapItem>
-                            <Button colorScheme="teal">Teal</Button>
-                        </WrapItem>
-                    </Wrap>
-                </Stack>
+            <Link href="/api/auth/signout">Sign out</Link>
 
-                <Input
-                    value={value}
-                    onChange={handleChange}
-                    placeholder="Here is a sample placeholder"
-                    size="lg"
-                />
-                <Button colorScheme="green" onClick={submitComment}>
-                    Green
-                </Button>
-            </main>
-
-            <footer className={styles.footer}>
-                <a
-                    href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Powered by{" "}
-                    <span className={styles.logo}>
-                        <Image
-                            src="/favicon.ico"
-                            alt="Vercel Logo"
-                            width={72}
-                            height={16}
-                        />
-                    </span>
-                </a>
-            </footer>
+            <Box
+                maxW="7xl"
+                mx="auto"
+                px={{ base: "4", md: "8", lg: "12" }}
+                py={{ base: "6", md: "8", lg: "12" }}
+            >
+                {!!products.data && (
+                    <ProductGrid>
+                        {products.data.map((product) => (
+                            <ProductCard key={product.id} product={product} />
+                        ))}
+                    </ProductGrid>
+                )}
+            </Box>
         </div>
     );
 };

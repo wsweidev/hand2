@@ -20,13 +20,27 @@ export const exampleRouter = createRouter()
             return await ctx.prisma.example.findMany();
         },
     })
-    .mutation("add-comment", {
+    .query("getProducts", {
+        async resolve() {
+            return await prisma.product.findMany();
+        },
+    })
+    .mutation("add-product", {
         input: z.object({
-            comment: z.string(),
+            id: z.string(),
+            name: z.string(),
+            currency: z.string(),
+            price: z.number(),
+            salePrice: z.optional(z.number()),
+            flag: z.optional(z.string()),
+            imageUrl: z.string(),
+            rating: z.number(),
+            ratingCount: z.number(),
+            description: z.string(),
         }),
         async resolve({ input }) {
-            const commentToDb = await prisma.comment.create({
-                data: { content: input.comment },
+            const productToDb = await prisma.product.create({
+                data: { ...input },
             });
             return { success: true };
         },
