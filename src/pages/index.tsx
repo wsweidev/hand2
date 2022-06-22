@@ -6,13 +6,26 @@ import {
     Box,
     Button,
     ButtonGroup,
+    Input,
     Stack,
     Wrap,
     WrapItem,
 } from "@chakra-ui/react";
 import { trpc } from "@src/utils/trpc";
+import { ChangeEvent, useState } from "react";
 
 const Home: NextPage = () => {
+    const [value, setValue] = useState("");
+    const commentMutation = trpc.useMutation(["add-comment"]);
+
+    const submitComment = () => {
+        commentMutation.mutate({ comment: value });
+    };
+
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setValue(event.target.value);
+    };
+
     return (
         <div className={styles.container}>
             <Head>
@@ -64,6 +77,16 @@ const Home: NextPage = () => {
                         </WrapItem>
                     </Wrap>
                 </Stack>
+
+                <Input
+                    value={value}
+                    onChange={handleChange}
+                    placeholder="Here is a sample placeholder"
+                    size="lg"
+                />
+                <Button colorScheme="green" onClick={submitComment}>
+                    Green
+                </Button>
             </main>
 
             <footer className={styles.footer}>
