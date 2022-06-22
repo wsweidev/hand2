@@ -11,12 +11,12 @@ import {
     Wrap,
     WrapItem,
 } from "@chakra-ui/react";
-import { trpc } from "@src/utils/trpc";
+import { trpc } from "../utils/trpc";
 import { ChangeEvent, useState } from "react";
 
 const Home: NextPage = () => {
     const [value, setValue] = useState("");
-    const commentMutation = trpc.useMutation(["add-comment"]);
+    const commentMutation = trpc.useMutation(["example.add-comment"]);
 
     const submitComment = () => {
         commentMutation.mutate({ comment: value });

@@ -1,21 +1,33 @@
-import "../styles/globals.css";
-import type { AppProps } from "next/app";
-import { ChakraProvider } from "@chakra-ui/react";
+// src/pages/_app.tsx
 import { withTRPC } from "@trpc/next";
-import { AppRouter } from "@src/backend/router";
+import type { AppRouter } from "../server/router";
+import type { AppType } from "next/dist/shared/lib/utils";
+import superjson from "superjson";
+import { SessionProvider } from "next-auth/react";
+import "../styles/globals.css";
+import { ChakraProvider } from "@chakra-ui/react";
 
-function MyApp({ Component, pageProps }: AppProps) {
+const MyApp: AppType = ({
+    Component,
+    pageProps: { session, ...pageProps },
+}) => {
     return (
-        <ChakraProvider>
-            <Component {...pageProps} />
-        </ChakraProvider>
+        <SessionProvider session={session}>
+            <ChakraProvider>
+                <Component {...pageProps} />
+            </ChakraProvider>
+        </SessionProvider>
     );
-}
+};
 
 const getBaseUrl = () => {
-    if (process.browser) return "";
-    if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-    return `http://localhost:${process.env.PORT ?? 3000}`;
+    if (typeof window !== "undefined") {
+        return "";
+    }
+    if (process.browser) return ""; // Browser should use current path
+    if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`; // SSR should use vercel url
+
+    return `http://localhost:${process.env.PORT ?? 3000}`; // dev SSR should use localhost
 };
 
 export default withTRPC<AppRouter>({
@@ -28,6 +40,7 @@ export default withTRPC<AppRouter>({
 
         return {
             url,
+            transformer: superjson,
             /**
              * @link https://react-query.tanstack.com/reference/QueryClient
              */
@@ -37,5 +50,5 @@ export default withTRPC<AppRouter>({
     /**
      * @link https://trpc.io/docs/ssr
      */
-    ssr: true,
+    ssr: false,
 })(MyApp);
