@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_URL")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  content   String
+}
+
+// model Vote {
+//   id           String   @id @default(cuid())
+//   createdAt    DateTime @default(now())
+//   votedFor     Int
+//   votedAgainst Int
+// }
+
+// model UserInRoom {
+//   // Unique fields
+//   role Role @default(GUEST)
+
+//   // Relations
+//   user   User   @relation(fields: [userId], references: [id])
+//   userId String
+//   room   Room   @relation(fields: [roomId], references: [id])
+//   roomId init
+
+//   @@id([userId, roomId])
+// }

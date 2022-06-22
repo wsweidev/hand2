@@ -13,11 +13,6 @@ import {
 import { trpc } from "@src/utils/trpc";
 
 const Home: NextPage = () => {
-    const { data, isLoading } = trpc.useQuery(["hello", { text: "ROUDAIN" }]);
-
-    if (isLoading) return <div>...LOADING</div>;
-    if (data) return <div>{data.greeting}</div>;
-
     return (
         <div className={styles.container}>
             <Head>
