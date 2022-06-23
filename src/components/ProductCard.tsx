@@ -25,7 +25,7 @@ interface Props {
 
 export const ProductCard = (props: Props) => {
     const { product, rootProps } = props;
-    const { name, imageUrl, price, salePrice, rating } = product;
+    const { name, imageUrl, price, salePrice, rating, ratingCount } = product;
     return (
         <Stack
             spacing={useBreakpointValue({ base: "4", md: "5" })}
@@ -71,7 +71,7 @@ export const ProductCard = (props: Props) => {
                         fontSize="sm"
                         color={useColorModeValue("gray.600", "gray.400")}
                     >
-                        12 Reviews
+                        {ratingCount} Reviews
                     </Text>
                 </HStack>
             </Stack>

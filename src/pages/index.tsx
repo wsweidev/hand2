@@ -15,28 +15,26 @@ import { trpc } from "../utils/trpc";
 import { ChangeEvent, useState } from "react";
 import { ProductGrid } from "@src/components/ProductGrid";
 import { ProductCard } from "@src/components/ProductCard";
-import Link from "next/link";
-import { signIn, signOut } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 const Home: NextPage = () => {
-    const query = trpc.useQuery(["next-auth.getSession"]);
-    const session = query.data;
-    console.log(session);
+    const session = useSession();
 
     const [value, setValue] = useState("");
     const products = trpc.useQuery(["product.getAll"]);
     // const productMutation = trpc.useMutation(["product.add"]);
 
-    // const submitComment = () => {
+    // const submitProduct = () => {
     //     productMutation.mutate({
-    //         id: "3",
-    //         name: "Marble Leather",
+    //         id: "2",
+    //         name: "Nice Watch",
     //         currency: "USD",
-    //         price: 199,
+    //         price: 99,
+    //         salePrice: 79,
     //         imageUrl:
     //             "https://images.unsplash.com/photo-1564594985645-4427056e22e2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80",
-    //         rating: 4,
-    //         ratingCount: 12,
+    //         rating: 5,
+    //         ratingCount: 17,
     //         description:
     //             "With a sleek design and a captivating essence, this is a modern Classic made for every occasion.",
     //     });
@@ -57,11 +55,11 @@ const Home: NextPage = () => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            {/* <Button onClick={submitComment} size="lg" colorScheme={"blue"} /> */}
+            {/* <Button onClick={submitProduct} size="lg" colorScheme={"blue"} /> */}
             <button
                 className="btn"
                 onClick={
-                    session
+                    session.status === "authenticated"
                         ? () => {
                               signOut();
                           }
@@ -70,7 +68,9 @@ const Home: NextPage = () => {
                           }
                 }
             >
-                {session ? "Sign Out" : "Sign In"}
+                {session.status === "authenticated"
+                    ? `Sign Out (${session.data.user?.name})`
+                    : "Sign In"}
             </button>
 
             <Box
