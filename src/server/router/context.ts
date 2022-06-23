@@ -16,12 +16,12 @@ export const createContext = async (
      * Note: If no req -> SSG is being used -> no session exists (null)
      * @link https://github.com/nextauthjs/next-auth/issues/1535
      */
-    // const session = opts && (await getServerSession(opts, nextAuthOptions));
+    const session = opts && (await getServerSession(opts, nextAuthOptions));
 
     return {
         req,
         res,
-        // session,
+        session,
         prisma,
     };
 };
