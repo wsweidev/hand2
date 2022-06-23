@@ -15,16 +15,17 @@ import { trpc } from "../utils/trpc";
 import { ChangeEvent, useState } from "react";
 import { ProductGrid } from "@src/components/ProductGrid";
 import { ProductCard } from "@src/components/ProductCard";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { signIn, signOut } from "next-auth/react";
 
 const Home: NextPage = () => {
-    const { data: session, status } = useSession();
+    const query = trpc.useQuery(["next-auth.getSession"]);
+    const session = query.data;
     console.log(session);
 
     const [value, setValue] = useState("");
-    const products = trpc.useQuery(["example.getProducts"]);
-    // const productMutation = trpc.useMutation(["example.add-product"]);
+    const products = trpc.useQuery(["product.getAll"]);
+    // const productMutation = trpc.useMutation(["product.add"]);
 
     // const submitComment = () => {
     //     productMutation.mutate({
@@ -57,13 +58,20 @@ const Home: NextPage = () => {
             </Head>
 
             {/* <Button onClick={submitComment} size="lg" colorScheme={"blue"} /> */}
-            {status === "authenticated" ? (
-                <p>Signed in as {session.user?.email}</p>
-            ) : (
-                <Link href="/api/auth/signin">Sign in</Link>
-            )}
-
-            <Link href="/api/auth/signout">Sign out</Link>
+            <button
+                className="btn"
+                onClick={
+                    session
+                        ? () => {
+                              signOut();
+                          }
+                        : () => {
+                              signIn();
+                          }
+                }
+            >
+                {session ? "Sign Out" : "Sign In"}
+            </button>
 
             <Box
                 maxW="7xl"
