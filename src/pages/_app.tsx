@@ -6,6 +6,7 @@ import superjson from "superjson";
 import { SessionProvider } from "next-auth/react";
 import { ChakraProvider } from "@chakra-ui/react";
 import Layout from "@src/components/Layout/Layout";
+import Head from "next/head";
 
 const MyApp: AppType = ({
     Component,
@@ -14,6 +15,11 @@ const MyApp: AppType = ({
     return (
         <SessionProvider session={session}>
             <ChakraProvider>
+                <Head>
+                    <title>Hand2</title>
+                    <meta name="description" content="Sell 2nd Hand items" />
+                    <link rel="icon" href="/favicon.ico" />
+                </Head>
                 <Layout>
                     <Component {...pageProps} />
                 </Layout>
