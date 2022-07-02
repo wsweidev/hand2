@@ -3,7 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { prisma } from "../../../server/db/client";
+import { prisma } from "@src/server/db/client";
 
 export const nextAuthOptions: NextAuthOptions = {
     // Configure one or more authentication providers
@@ -15,6 +15,9 @@ export const nextAuthOptions: NextAuthOptions = {
         }),
         // ...add more providers here
     ],
+    pages: {
+        signIn: "/auth/signin",
+    },
 };
 
 export default NextAuth(nextAuthOptions);

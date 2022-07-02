@@ -1,6 +1,6 @@
-import { createRouter } from "./context";
+import { createRouter } from "@src/server/router/context";
 import { z } from "zod";
-import { prisma } from "../db/client";
+import { prisma } from "@src/server/db/client";
 
 export const productRouter = createRouter()
     .query("getAll", {
