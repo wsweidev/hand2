@@ -13,27 +13,82 @@ datasource db {
     referentialIntegrity = "prisma"
 }
 
-model Example {
-    id String @id @default(cuid())
+model Listing {
+    id           String        @id @default(cuid())
+    userId       String
+    user         User          @relation(fields: [userId], references: [id])
+    createdAt    DateTime      @default(now())
+    expires      DateTime
+    name         String
+    description  String        @db.Text
+    price        Float
+    type         ListingType
+    status       ListingStatus @default(listed)
+    mainImageUrl String?       @default("") @db.Text
+    Bid          Bid[]
+    Transaction  Transaction[]
 }
 
-model Product {
-    id          String  @id @default(cuid())
-    name        String
-    currency    String
-    price       Float
-    salePrice   Float?
-    flag        String?
-    imageUrl    String
-    rating      Int
-    ratingCount Int
-    description String
+enum ListingType {
+    bid
+    sell
 }
 
-model Comment {
+enum ListingStatus {
+    sold
+    listed
+    canceled
+}
+
+model Bid {
     id        String   @id @default(cuid())
+    userId    String
+    user      User     @relation(fields: [userId], references: [id])
+    listingId String
+    listing   Listing  @relation(fields: [listingId], references: [id])
     createdAt DateTime @default(now())
-    content   String
+    amount    Float
+}
+
+model Transaction {
+    id        String          @id @default(cuid())
+    userId    String
+    user      User            @relation(fields: [userId], references: [id])
+    listingId String
+    listing   Listing         @relation(fields: [listingId], references: [id])
+    createdAt DateTime        @default(now())
+    amount    Float
+    type      TransactionType
+}
+
+enum TransactionType {
+    sell
+    buy
+    topup
+    withdraw
+}
+
+model Chat {
+    id          String        @id @default(cuid())
+    users       User[]
+    ChatMessage ChatMessage[]
+}
+
+model ChatMessage {
+    id        String   @id @default(cuid())
+    chatId    String
+    chat      Chat     @relation(fields: [chatId], references: [id])
+    user      User     @relation(fields: [userId], references: [id])
+    userId    String
+    createdAt DateTime @default(now())
+}
+
+model Rating {
+    id      String @id @default(cuid())
+    raterId String
+    user    User   @relation(fields: [userId], references: [id])
+    userId  String
+    stars   Int
 }
 
 // Neccessary for Next auth
@@ -64,13 +119,20 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String        @id @default(cuid())
     name          String?
-    email         String?   @unique
+    email         String?       @unique
     emailVerified DateTime?
     image         String?
     accounts      Account[]
     sessions      Session[]
+    wallet        Int           @default(0)
+    listings      Listing[]
+    bids          Bid[]
+    transactions  Transaction[]
+    chats         Chat[]
+    chatMessages  ChatMessage[]
+    ratings       Rating[]
 }
 
 model VerificationToken {
@@ -79,4 +141,27 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Example {
+    id String @id @default(cuid())
+}
+
+model Product {
+    id          String  @id @default(cuid())
+    name        String
+    currency    String
+    price       Float
+    salePrice   Float?
+    flag        String?
+    imageUrl    String
+    rating      Int
+    ratingCount Int
+    description String
+}
+
+model Comment {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    content   String
 }

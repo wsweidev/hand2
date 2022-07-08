@@ -21,7 +21,6 @@ const Home: NextPage = () => {
     const session = useSession();
 
     const [value, setValue] = useState("");
-    const products = trpc.useQuery(["product.getAll"]);
     // const productMutation = trpc.useMutation(["product.add"]);
 
     // const submitProduct = () => {
@@ -54,13 +53,13 @@ const Home: NextPage = () => {
                 px={{ base: "4", md: "8", lg: "12" }}
                 py={{ base: "6", md: "8", lg: "12" }}
             >
-                {!!products.data && (
+                {/* {!!products.data && (
                     <ProductGrid>
                         {products.data.map((product) => (
                             <ProductCard key={product.id} product={product} />
                         ))}
                     </ProductGrid>
-                )}
+                )} */}
             </Box>
         </div>
     );
