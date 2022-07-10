@@ -31,8 +31,7 @@ export const listingsRouter = createRouter()
             description: z.string(),
             price: z.number(),
             type: z.enum(["bid", "sell"]),
-            status: z.enum(["sold", "listed", "canceled"]),
-            mainImageUrl: z.optional(z.string()),
+            mainImageUrl: z.string(),
         }),
         async resolve({ input, ctx }) {
             const userId = ctx.session?.user!.id!;
@@ -44,7 +43,6 @@ export const listingsRouter = createRouter()
                     description: input.description,
                     price: input.price,
                     type: input.type,
-                    status: input.status,
                     mainImageUrl: input.mainImageUrl,
                 },
             });

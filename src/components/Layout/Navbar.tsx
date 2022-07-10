@@ -33,6 +33,8 @@ const Navbar = () => {
                 position="sticky"
                 zIndex={3000}
                 top={"0"}
+                height={"60px"}
+                alignItems="center"
             >
                 <Flex
                     h={16}
