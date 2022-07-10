@@ -15,17 +15,71 @@ import {
     useColorMode,
     Center,
     Image,
+    Drawer,
+    DrawerOverlay,
+    DrawerContent,
+    DrawerHeader,
+    DrawerBody,
+    DrawerCloseButton,
+    Text,
+    VStack,
 } from "@chakra-ui/react";
-import { MoonIcon, SunIcon } from "@chakra-ui/icons";
+import { MoonIcon, SunIcon, CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/router";
+import { FaFacebook } from "react-icons/fa";
+import {
+    IoLogOutOutline,
+    IoBagHandleOutline,
+    IoChatboxEllipsesOutline,
+    IoBrowsersOutline,
+    IoGridOutline,
+} from "react-icons/io5";
+import { useContext } from "react";
+import { DrawerContext } from "./DrawerContext";
 
 const Navbar = () => {
     const session = useSession();
     const router = useRouter();
+    const { isOpen, onClose, onOpen } = useContext(DrawerContext);
     const { colorMode, toggleColorMode } = useColorMode();
+
     return (
         <>
+            <Drawer
+                placement={"right"}
+                onClose={onClose}
+                isOpen={isOpen}
+                preserveScrollBarGap
+            >
+                <DrawerOverlay />
+                <DrawerContent mt={"60px"}>
+                    <DrawerHeader borderBottomWidth="1px">
+                        <VStack paddingY={"10px"}>
+                            <Avatar
+                                size={"2xl"}
+                                src={
+                                    session.data?.user?.image ||
+                                    "https://avatars.dicebear.com/api/male/username.svg"
+                                }
+                            />
+                            <Box>
+                                <Text mt="10px">
+                                    {session.data?.user?.name || "Guest"}
+                                </Text>
+                            </Box>
+                        </VStack>
+                    </DrawerHeader>
+                    <DrawerBody mt={"20px"}>
+                        {session.status === "unauthenticated" ? (
+                            <GuestButtons />
+                        ) : (
+                            <UserButtons />
+                        )}
+                    </DrawerBody>
+                </DrawerContent>
+            </Drawer>
             <Box
                 backgroundColor={useColorModeValue("gray.100", "gray.700")}
                 px={4}
@@ -75,89 +129,12 @@ const Navbar = () => {
                                     <SunIcon />
                                 )}
                             </Button>
-
-                            {session.status === "unauthenticated" ? (
-                                <Button
-                                    backgroundColor={"transparent"}
-                                    onClick={() => {
-                                        signIn("google");
-                                    }}
-                                >
-                                    Login
-                                </Button>
-                            ) : (
-                                <Menu>
-                                    <MenuButton
-                                        as={Button}
-                                        rounded={"full"}
-                                        variant={"link"}
-                                        cursor={"pointer"}
-                                        minW={0}
-                                    >
-                                        <Avatar
-                                            size={"sm"}
-                                            src={
-                                                "https://avatars.dicebear.com/api/male/username.svg"
-                                            }
-                                        />
-                                    </MenuButton>
-                                    <MenuList alignItems={"center"}>
-                                        <br />
-                                        <Center>
-                                            <Avatar
-                                                size={"2xl"}
-                                                src={
-                                                    "https://avatars.dicebear.com/api/male/username.svg"
-                                                }
-                                            />
-                                        </Center>
-                                        <br />
-                                        <Center>
-                                            <p>
-                                                {session.data?.user?.name ??
-                                                    "Guest"}
-                                            </p>
-                                        </Center>
-                                        <br />
-                                        <MenuDivider />
-                                        <MenuItem
-                                            onClick={() => {
-                                                router.push("/MyWallet");
-                                            }}
-                                        >
-                                            Wallet
-                                        </MenuItem>
-                                        {session.status === "loading" && (
-                                            <MenuItem onClick={() => {}}>
-                                                Authenticating...
-                                            </MenuItem>
-                                        )}
-
-                                        {session.status === "authenticated" && (
-                                            <>
-                                                <MenuItem
-                                                    onClick={() => {
-                                                        router.push(
-                                                            "/MyListings"
-                                                        );
-                                                    }}
-                                                >
-                                                    My listings
-                                                </MenuItem>
-                                                <MenuItem
-                                                    onClick={() => {
-                                                        signOut({
-                                                            callbackUrl: "/",
-                                                        });
-                                                    }}
-                                                >
-                                                    Logout
-                                                </MenuItem>
-                                            </>
-                                        )}
-                                    </MenuList>
-                                </Menu>
-                            )}
+                            <Button
+                                onClick={isOpen ? onClose : onOpen}
+                                backgroundColor={"transparent"}
+                            >
+                                {isOpen ? <CloseIcon /> : <HamburgerIcon />}
+                            </Button>
                         </Stack>
                     </Flex>
                 </Flex>
@@ -167,3 +144,104 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+const GuestButtons = () => {
+    const router = useRouter();
+    return (
+        <VStack>
+            <Button
+                iconSpacing="20px"
+                justifyContent="flex-start"
+                variant={"outline"}
+                leftIcon={<FcGoogle size={"20px"} />}
+                w={"100%"}
+                onClick={() => {
+                    signIn("google", { callbackUrl: "/Home" });
+                }}
+            >
+                <Center>
+                    <Text>Sign in with Google</Text>
+                </Center>
+            </Button>
+            <Button
+                iconSpacing="20px"
+                justifyContent="flex-start"
+                colorScheme={"facebook"}
+                leftIcon={<FaFacebook size={"20px"} />}
+                w={"100%"}
+                onClick={() => {
+                    signIn("facebook", { callbackUrl: "/Home" });
+                }}
+            >
+                Sign In With Facebook
+            </Button>
+        </VStack>
+    );
+};
+
+const UserButtons = () => {
+    const router = useRouter();
+    return (
+        <VStack spacing={2}>
+            <Button
+                iconSpacing="20px"
+                justifyContent="flex-start"
+                leftIcon={<IoBrowsersOutline size={"20px"} />}
+                w={"100%"}
+                onClick={() => {
+                    router.push("/Home");
+                }}
+            >
+                <Center>
+                    <Text>Home</Text>
+                </Center>
+            </Button>
+            <Button
+                iconSpacing="20px"
+                leftIcon={<IoGridOutline size={"20px"} />}
+                justifyContent="flex-start"
+                w={"100%"}
+                onClick={() => {
+                    router.push("/MyListings");
+                }}
+            >
+                <Center>
+                    <Text>My Listings</Text>
+                </Center>
+            </Button>
+            <Button
+                iconSpacing="20px"
+                justifyContent="flex-start"
+                leftIcon={<IoChatboxEllipsesOutline size={"20px"} />}
+                w={"100%"}
+                onClick={() => {
+                    router.push("/Chat");
+                }}
+            >
+                <Center>
+                    <Text>Chat</Text>
+                </Center>
+            </Button>
+
+            <Box w={"100%"}>
+                <Button
+                    justifyContent="flex-start"
+                    colorScheme={"red"}
+                    iconSpacing="20px"
+                    leftIcon={<IoLogOutOutline size={"20px"} />}
+                    w={"100%"}
+                    mt="30px"
+                    onClick={() => {
+                        signOut({
+                            callbackUrl: "/",
+                        });
+                    }}
+                >
+                    <Center>
+                        <Text>Logout</Text>
+                    </Center>
+                </Button>
+            </Box>
+        </VStack>
+    );
+};

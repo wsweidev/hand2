@@ -15,6 +15,9 @@ const MyListings: NextPage = () => {
                 onClose={() => {
                     setIsVisibleListingModal(false);
                 }}
+                onSave={() => {
+                    setIsVisibleListingModal(false);
+                }}
             />
             <Box>
                 {listings.data &&
@@ -30,7 +33,7 @@ const MyListings: NextPage = () => {
                             <Image
                                 width="500"
                                 height="200"
-                                src={listings.data[0]?.mainImageUrl!}
+                                src={listing?.mainImageUrl!}
                                 alt="listing image"
                             />
                         </>

@@ -7,12 +7,15 @@ import {
     Button,
 } from "@chakra-ui/react";
 import { LandingIllustration } from "@src/components/Illustrations/LandingIllustration";
+import { DrawerContext } from "@src/components/Layout/DrawerContext";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { useContext } from "react";
 
 export default function CallToActionWithIllustration() {
     const session = useSession();
     const router = useRouter();
+    const { onOpen } = useContext(DrawerContext);
     return (
         <Container maxW={"5xl"}>
             <Stack
@@ -44,7 +47,7 @@ export default function CallToActionWithIllustration() {
                             if (session.status === "authenticated") {
                                 router.push("/Home");
                             } else if (session.status === "unauthenticated") {
-                                signIn("google");
+                                onOpen();
                             }
                         }}
                     >

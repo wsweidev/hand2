@@ -33,13 +33,11 @@ import { trpc } from "@src/utils/trpc";
 type AddListingModalProps = {
     isVisible: boolean;
     onClose: () => void;
-    onSave?: () => void;
+    onSave: () => void;
 };
 
 const AddListingModal = (props: AddListingModalProps) => {
-    const [imageBase64, setImageBase64] = useState<string | undefined>(
-        undefined
-    );
+    const [imageBase64, setImageBase64] = useState<string | undefined>();
     const [method, setMethod] = useState<"bid" | "sell" | undefined>("sell");
     const [price, setPrice] = useState<number>(0);
     const [expiryDate, setExpiryDate] = useState<Date | undefined>();
@@ -49,11 +47,18 @@ const AddListingModal = (props: AddListingModalProps) => {
     const addListing = trpc.useMutation(["listings.add"], {
         onSuccess: () => {
             alert("Listing added successfully");
+            resetFields();
+            props.onSave();
         },
         onError: () => {
             alert("Error crating a new listing");
         },
     });
+
+    const handleClose = () => {
+        resetFields();
+        props.onClose();
+    };
 
     const getBase64 = (file: File): Promise<string | undefined> => {
         return new Promise((resolve, reject) => {
@@ -90,6 +95,15 @@ const AddListingModal = (props: AddListingModalProps) => {
         }
     };
 
+    const resetFields = () => {
+        setImageBase64(undefined);
+        setMethod("sell");
+        setPrice(0);
+        setExpiryDate(undefined);
+        setName(undefined);
+        setDescription(undefined);
+    };
+
     const handleSave = () => {
         if (
             !description ||
@@ -109,9 +123,6 @@ const AddListingModal = (props: AddListingModalProps) => {
                 type: method,
                 mainImageUrl: imageBase64,
             });
-            if (props.onSave) {
-                props.onSave();
-            }
         }
     };
 
@@ -119,10 +130,8 @@ const AddListingModal = (props: AddListingModalProps) => {
         <Modal
             closeOnOverlayClick={false}
             isOpen={props.isVisible}
-            onClose={() => {
-                setImageBase64(undefined);
-                props.onClose();
-            }}
+            onClose={handleClose}
+            preserveScrollBarGap
         >
             <ModalOverlay />
             <ModalContent
@@ -243,16 +252,15 @@ const AddListingModal = (props: AddListingModalProps) => {
                 </ModalBody>
 
                 <ModalFooter pb="40px">
-                    <Button colorScheme="teal" mr={3} onClick={handleSave}>
+                    <Button
+                        colorScheme="teal"
+                        mr={3}
+                        onClick={handleSave}
+                        isLoading={addListing.isLoading}
+                    >
                         Save
                     </Button>
-                    <Button
-                        onClick={() => {
-                            props.onClose();
-                        }}
-                    >
-                        Cancel
-                    </Button>
+                    <Button onClick={handleClose}>Cancel</Button>
                 </ModalFooter>
             </ModalContent>
         </Modal>
