@@ -72,16 +72,16 @@ const Navbar = () => {
                         </VStack>
                     </DrawerHeader>
                     <DrawerBody mt={"20px"}>
-                        {session.status === "unauthenticated" ? (
-                            <GuestButtons />
+                        {session.status === "authenticated" ? (
+                            <UserButtons userId={session.data?.user?.id!} />
                         ) : (
-                            <UserButtons />
+                            <GuestButtons />
                         )}
                     </DrawerBody>
                 </DrawerContent>
             </Drawer>
             <Box
-                backgroundColor={useColorModeValue("gray.100", "gray.700")}
+                backgroundColor={useColorModeValue("white", "gray.700")}
                 px={4}
                 width={"full"}
                 position="sticky"
@@ -170,7 +170,7 @@ const GuestButtons = () => {
                 leftIcon={<FaFacebook size={"20px"} />}
                 w={"100%"}
                 onClick={() => {
-                    signIn("facebook", { callbackUrl: "/Home" });
+                    // signIn("facebook", { callbackUrl: "/Home" });
                 }}
             >
                 Sign In With Facebook
@@ -179,7 +179,7 @@ const GuestButtons = () => {
     );
 };
 
-const UserButtons = () => {
+const UserButtons = ({ userId }: { userId: string }) => {
     const router = useRouter();
     return (
         <VStack spacing={2}>
@@ -202,11 +202,11 @@ const UserButtons = () => {
                 justifyContent="flex-start"
                 w={"100%"}
                 onClick={() => {
-                    router.push("/MyListings");
+                    router.push(`/Profile/${userId}`);
                 }}
             >
                 <Center>
-                    <Text>My Listings</Text>
+                    <Text>My Profile</Text>
                 </Center>
             </Button>
             <Button

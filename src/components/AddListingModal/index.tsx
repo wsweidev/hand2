@@ -23,6 +23,7 @@ import {
     NumberInputStepper,
     NumberIncrementStepper,
     NumberDecrementStepper,
+    useToast,
 } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
 import { AddIcon } from "@chakra-ui/icons";
@@ -43,15 +44,28 @@ const AddListingModal = (props: AddListingModalProps) => {
     const [expiryDate, setExpiryDate] = useState<Date | undefined>();
     const [name, setName] = useState<string | undefined>();
     const [description, setDescription] = useState<string | undefined>();
+    const toast = useToast();
 
     const addListing = trpc.useMutation(["listings.add"], {
         onSuccess: () => {
-            alert("Listing added successfully");
+            toast({
+                title: "Success",
+                description: "Listing added successfully",
+                status: "success",
+                duration: 4000,
+                isClosable: true,
+            });
             resetFields();
             props.onSave();
         },
         onError: () => {
-            alert("Error crating a new listing");
+            toast({
+                title: "Error",
+                description: "We were unable to create listing",
+                status: "error",
+                duration: 4000,
+                isClosable: true,
+            });
         },
     });
 
@@ -73,7 +87,6 @@ const AddListingModal = (props: AddListingModalProps) => {
                 // Make a fileInfo Object
                 const baseURL = reader.result as string;
                 if (baseURL) {
-                    console.log(baseURL);
                     resolve(baseURL);
                 } else {
                     reject("");
@@ -89,7 +102,13 @@ const AddListingModal = (props: AddListingModalProps) => {
                 const imageInBase46 = await getBase64(file);
                 setImageBase64(imageInBase46);
             } catch (err) {
-                alert("Unable to select this image");
+                toast({
+                    title: "Error",
+                    description: "Unable to select this image",
+                    status: "error",
+                    duration: 4000,
+                    isClosable: true,
+                });
                 setImageBase64(undefined);
             }
         }
@@ -113,7 +132,13 @@ const AddListingModal = (props: AddListingModalProps) => {
             !method ||
             !imageBase64
         ) {
-            alert("Please ensure all required fields are filled");
+            toast({
+                title: "Invalid input",
+                description: "Please ensure all required fields are filled",
+                status: "error",
+                duration: 4000,
+                isClosable: true,
+            });
         } else {
             addListing.mutate({
                 description,

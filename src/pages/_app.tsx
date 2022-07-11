@@ -7,6 +7,9 @@ import { SessionProvider } from "next-auth/react";
 import { ChakraProvider } from "@chakra-ui/react";
 import Layout from "@src/components/Layout/Layout";
 import Head from "next/head";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 
 const MyApp: AppType = ({
     Component,

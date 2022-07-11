@@ -38,7 +38,7 @@ export const listingsRouter = createRouter()
             const productToDb = await prisma.listing.create({
                 data: {
                     userId: userId,
-                    expires: new Date(),
+                    expires: input.expires,
                     name: input.name,
                     description: input.description,
                     price: input.price,
@@ -46,6 +46,115 @@ export const listingsRouter = createRouter()
                     mainImageUrl: input.mainImageUrl,
                 },
             });
+            return { success: true };
+        },
+    })
+    .query("getListingById", {
+        input: z.object({
+            id: z.string(),
+        }),
+        async resolve({ input, ctx }) {
+            const listing = await prisma.listing.findFirst({
+                include: { user: true },
+                where: { id: { equals: input.id } },
+            });
+            return {
+                ...listing,
+                isOwn: listing?.userId === ctx.session?.user?.id,
+            };
+        },
+    })
+    .mutation("addBid", {
+        input: z.object({
+            listingId: z.string(),
+            amount: z.number(),
+        }),
+        async resolve({ input, ctx }) {
+            const userId = ctx.session?.user!.id!;
+            const bidToDb = await prisma.bid.create({
+                data: {
+                    userId: userId,
+                    listingId: input.listingId,
+                    amount: input.amount,
+                },
+            });
+
+            const bidToListing = await prisma.listing.update({
+                where: { id: bidToDb.listingId },
+                data: {
+                    highestBidderId: userId,
+                    price: input.amount,
+                },
+            });
+
+            return { success: true };
+        },
+    })
+    .mutation("finaliseBid", {
+        input: z.object({
+            listingId: z.string(),
+        }),
+        async resolve({ input, ctx }) {
+            const userId = ctx.session?.user!.id!;
+            const listing = await prisma.listing.findFirst({
+                where: { id: input.listingId },
+                include: { highestBidder: true },
+            });
+
+            const updatedListing = await prisma.listing.update({
+                where: { id: input.listingId },
+                data: {
+                    soldToId: listing?.highestBidderId,
+                    status: "sold",
+                },
+            });
+
+            const userWalletDeduct = await prisma.user.update({
+                where: { id: updatedListing?.highestBidderId! },
+                data: {
+                    wallet: { decrement: updatedListing.price },
+                },
+            });
+
+            const userWalletIncrease = await prisma.user.update({
+                where: { id: updatedListing.userId },
+                data: {
+                    wallet: { increment: updatedListing.price },
+                },
+            });
+
+            return { success: true };
+        },
+    })
+    .mutation("purchase", {
+        input: z.object({
+            listingId: z.string(),
+        }),
+        async resolve({ input, ctx }) {
+            const userId = ctx.session?.user!.id!;
+
+            const updatedListing = await prisma.listing.update({
+                where: { id: input.listingId },
+                data: {
+                    soldToId: userId,
+                    status: "sold",
+                },
+            });
+
+            const userWalletDeduct = await prisma.user.update({
+                where: { id: userId },
+                data: {
+                    wallet: { decrement: updatedListing.price },
+                },
+            });
+
+            const userWalletIncrease = await prisma.user.update({
+                where: { id: updatedListing.userId },
+                data: {
+                    wallet: { increment: updatedListing.price },
+                },
+            });
+
             return { success: true };
         },
     });

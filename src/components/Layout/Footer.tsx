@@ -58,7 +58,7 @@ const SocialButton = ({
 export default function LargeWithLogoCentered() {
     return (
         <Box
-            bg={useColorModeValue("gray.100", "gray.700")}
+            bg={useColorModeValue("white", "gray.700")}
             color={useColorModeValue("gray.700", "gray.200")}
         >
             <Container as={Stack} maxW={"6xl"} py={10}>
