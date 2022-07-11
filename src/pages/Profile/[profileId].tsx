@@ -15,7 +15,7 @@ import {
 import { trpc } from "@src/utils/trpc";
 import { useRouter } from "next/router";
 import ListingsDisplay from "@src/components/ListingsDisplay";
-// @ts-ignore
+// @ts-expect-error
 import ReactStars from "react-rating-stars-component";
 import { IoWalletOutline } from "react-icons/io5";
 import TopupModal from "@src/components/TopupModal";

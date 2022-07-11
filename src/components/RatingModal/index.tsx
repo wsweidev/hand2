@@ -16,7 +16,7 @@ import {
     Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
-// @ts-ignore
+// @ts-expect-error
 import ReactStars from "react-rating-stars-component";
 
 import { trpc } from "@src/utils/trpc";
