@@ -39,7 +39,7 @@ const Profile: NextPage = () => {
         average: profile?.ratings
             ? profile?.ratings.reduce((accumulator, rating) => {
                   return accumulator + rating.stars;
-              }, 1) / profile?.ratings?.length
+              }, 0) / profile?.ratings?.length
             : 0,
     };
 
