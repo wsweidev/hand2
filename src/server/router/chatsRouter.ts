@@ -34,11 +34,17 @@ export const chatsRouter = createRouter()
                     receiver: true,
                     mentionedListing: true,
                 },
-                where: { OR: { senderId: userId, receiverId: userId } },
+                where: {
+                    OR: [
+                        { receiverId: { equals: userId } },
+                        { senderId: { equals: userId } },
+                    ],
+                },
                 orderBy: { createdAt: "asc" },
             });
+
             const groupedChats = groupBy(chats, (chat) =>
-                chat.receiver.name! === userId
+                chat.senderId === userId
                     ? chat.receiver.name!
                     : chat.sender.name!
             );

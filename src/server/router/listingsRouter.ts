@@ -55,7 +55,7 @@ export const listingsRouter = createRouter()
         }),
         async resolve({ input, ctx }) {
             const listing = await prisma.listing.findFirst({
-                include: { user: true },
+                include: { user: true, highestBidder: true, buyer: true },
                 where: { id: { equals: input.id } },
             });
             return {
@@ -152,6 +152,21 @@ export const listingsRouter = createRouter()
                 where: { id: updatedListing.userId },
                 data: {
                     wallet: { increment: updatedListing.price },
+                },
+            });
+
+            return { success: true };
+        },
+    })
+    .mutation("cancelListing", {
+        input: z.object({
+            listingId: z.string(),
+        }),
+        async resolve({ input, ctx }) {
+            const updatedListing = await prisma.listing.update({
+                where: { id: input.listingId },
+                data: {
+                    status: "canceled",
                 },
             });
 
