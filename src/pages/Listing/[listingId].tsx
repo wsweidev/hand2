@@ -212,9 +212,6 @@ const Listing = () => {
                 />
             )}
             <Flex direction="column" alignItems="center" w="100%">
-                <Text>{"Highest Bidder: " + listing?.highestBidderId}</Text>
-                <Text>{"Sold to: " + listing?.soldToId}</Text>
-                <Text>{"Stats: " + listing?.status}</Text>
                 {!!listing && (
                     <Flex
                         w={["100%", "75%", "50%"]}

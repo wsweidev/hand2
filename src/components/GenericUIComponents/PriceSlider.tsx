@@ -23,15 +23,15 @@ export const PriceSlider = ({
             defaultValue={[0, 10000]}
             min={0}
             max={10000}
-            step={50}
+            step={100}
             colorScheme="teal"
             onChange={(v) => setSliderValue(v)}
             onMouseEnter={() => setShowTooltip(true)}
+            onTouchStart={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
+            onTouchEnd={() => setShowTooltip(false)}
         >
-            {[
-                0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000,
-            ].map((number) => (
+            {[0, 2000, 4000, 6000, 8000, 10000].map((number) => (
                 <RangeSliderMark
                     key={number.toString()}
                     value={number}

@@ -84,12 +84,20 @@ const Profile: NextPage = () => {
                         borderRadius="15px"
                     >
                         <Avatar src={profile.image!} size="2xl" />
-                        <VStack mt="10px">
-                            <Heading>
+                        <VStack mt="10px" spacing={5}>
+                            <Heading
+                                fontSize={["lg", "xl", "3xl"]}
+                                textAlign="center"
+                            >
                                 {profile.name + (profile.isOwn ? " (You)" : "")}
                             </Heading>
-                            <HStack alignItems={"center"} mt="20px">
-                                <Box pb="5px">
+                            <Flex
+                                mt="20px"
+                                direction={["column"]}
+                                alignItems="center"
+                                justifyContent={"center"}
+                            >
+                                <Box>
                                     <ReactStars
                                         key={rating.average}
                                         count={5}
@@ -99,9 +107,12 @@ const Profile: NextPage = () => {
                                         activeColor="#ffd700"
                                     />
                                 </Box>
-                                <Text pb="5px">{` (${rating.count} Reviews)`}</Text>
+                                <Text
+                                    fontSize={["sm", "md", "md"]}
+                                >{` (${rating.count} Reviews)`}</Text>
 
                                 <Button
+                                    mt="5px"
                                     size={"xs"}
                                     colorScheme={"yellow"}
                                     onClick={() => {
@@ -111,7 +122,7 @@ const Profile: NextPage = () => {
                                 >
                                     {isRated ? "Rated" : "Rate"}
                                 </Button>
-                            </HStack>
+                            </Flex>
 
                             {profile.isOwn && (
                                 <HStack mt="20px">

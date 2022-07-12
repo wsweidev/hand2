@@ -189,6 +189,7 @@ const GuestButtons = () => {
 
 const UserButtons = ({ userId }: { userId: string }) => {
     const router = useRouter();
+    const drawer = useContext(DrawerContext);
     return (
         <VStack spacing={2}>
             <Button
@@ -198,6 +199,7 @@ const UserButtons = ({ userId }: { userId: string }) => {
                 w={"100%"}
                 onClick={() => {
                     router.push("/Home");
+                    drawer.onClose();
                 }}
             >
                 <Center>
@@ -211,6 +213,7 @@ const UserButtons = ({ userId }: { userId: string }) => {
                 w={"100%"}
                 onClick={() => {
                     router.push(`/Profile/${userId}`);
+                    drawer.onClose();
                 }}
             >
                 <Center>
@@ -224,6 +227,7 @@ const UserButtons = ({ userId }: { userId: string }) => {
                 w={"100%"}
                 onClick={() => {
                     router.push("/Chat");
+                    drawer.onClose();
                 }}
             >
                 <Center>
@@ -243,6 +247,7 @@ const UserButtons = ({ userId }: { userId: string }) => {
                         signOut({
                             callbackUrl: "/",
                         });
+                        drawer.onClose();
                     }}
                 >
                     <Center>

@@ -63,7 +63,7 @@ export default function LargeWithLogoCentered() {
         >
             <Container as={Stack} maxW={"6xl"} py={10}>
                 <SimpleGrid columns={3} spacing={8}>
-                    <Stack align={"flex-start"}>
+                    <Stack align={"flex-start"} textAlign="start">
                         <ListHeader>Company</ListHeader>
                         <Link href={"#"}>About Us</Link>
                         <Link href={"#"}>Press</Link>
@@ -71,7 +71,7 @@ export default function LargeWithLogoCentered() {
                         <Link href={"#"}>Contact Us</Link>
                         <Link href={"#"}>Partners</Link>
                     </Stack>
-                    <Stack align={"center"}>
+                    <Stack align={"center"} textAlign="center">
                         <ListHeader>Legal</ListHeader>
                         <Link href={"#"}>Cookies Policy</Link>
                         <Link href={"#"}>Privacy Policy</Link>
@@ -79,7 +79,7 @@ export default function LargeWithLogoCentered() {
                         <Link href={"#"}>Law Enforcement</Link>
                         <Link href={"#"}>Status</Link>
                     </Stack>
-                    <Stack align={"flex-end"}>
+                    <Stack align={"flex-end"} textAlign="end">
                         <ListHeader>Follow Us</ListHeader>
                         <Link href={"#"}>Facebook</Link>
                         <Link href={"#"}>Twitter</Link>
