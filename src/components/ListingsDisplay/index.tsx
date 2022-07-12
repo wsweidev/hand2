@@ -26,7 +26,8 @@ import {
 } from "@chakra-ui/react";
 import { trpc } from "@src/utils/trpc";
 import { ChangeEvent, useState } from "react";
-import { FaDollarSign } from "react-icons/fa";
+import { FaDollarSign, FaRegMoneyBillAlt } from "react-icons/fa";
+import { GiTakeMyMoney } from "react-icons/gi";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Listing, User } from "@prisma/client";
 import dayjs from "dayjs";
@@ -206,6 +207,7 @@ const ListingCard = ({ listing }: listingCardProps) => {
             >
                 <Center>
                     <Image
+                        borderRadius={"10"}
                         width="100%"
                         height="100%"
                         src={listing.mainImageUrl!}
@@ -223,12 +225,20 @@ const ListingCard = ({ listing }: listingCardProps) => {
             </Heading>
 
             <HStack mt={4}>
+                {listing.type === "bid" ? (
+                    <GiTakeMyMoney color="teal" />
+                ) : (
+                    <FaRegMoneyBillAlt color="teal" />
+                )}
                 <Text fontWeight="semibold">{"Type: "}</Text>
                 <Text>{listing.type === "bid" ? "Bid" : "Sell"}</Text>
             </HStack>
             <HStack mt={4}>
                 <FaDollarSign color="teal" />
-                <Text fontWeight="semibold">{"RM " + listing.price}</Text>
+                <Text fontWeight="semibold">
+                    {listing.type === "bid" ? "Highest Bid: " : "Price: "}
+                </Text>
+                <Text>{"RM " + listing.price}</Text>
             </HStack>
 
             <Text

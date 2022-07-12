@@ -23,6 +23,7 @@ import {
     DrawerCloseButton,
     Text,
     VStack,
+    useToast,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon, CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -147,6 +148,7 @@ export default Navbar;
 
 const GuestButtons = () => {
     const router = useRouter();
+    const toast = useToast();
     return (
         <VStack>
             <Button
@@ -170,7 +172,13 @@ const GuestButtons = () => {
                 leftIcon={<FaFacebook size={"20px"} />}
                 w={"100%"}
                 onClick={() => {
-                    // signIn("facebook", { callbackUrl: "/Home" });
+                    toast({
+                        title: "Work in progress",
+                        description: "Facebook login is not yet supported",
+                        status: "warning",
+                        duration: 4000,
+                        isClosable: true,
+                    });
                 }}
             >
                 Sign In With Facebook

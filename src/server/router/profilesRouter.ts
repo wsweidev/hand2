@@ -34,6 +34,15 @@ export const profilesRouter = createRouter()
             };
         },
     })
+    .query("getOwnProfile", {
+        async resolve({ ctx }) {
+            const userId = ctx.session?.user?.id;
+            const profile = await prisma.user.findFirst({
+                where: { id: { equals: userId } },
+            });
+            return profile;
+        },
+    })
     .mutation("topup", {
         input: z.object({
             amount: z.number(),

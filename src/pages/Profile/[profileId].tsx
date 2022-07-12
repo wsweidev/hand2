@@ -99,7 +99,7 @@ const Profile: NextPage = () => {
                                         activeColor="#ffd700"
                                     />
                                 </Box>
-                                <Text pb="5px">{` (${rating.count})`}</Text>
+                                <Text pb="5px">{` (${rating.count} Reviews)`}</Text>
 
                                 <Button
                                     size={"xs"}
@@ -112,21 +112,22 @@ const Profile: NextPage = () => {
                                     {isRated ? "Rated" : "Rate"}
                                 </Button>
                             </HStack>
-                            <HStack mt="20px">
-                                <IoWalletOutline color="teal" size={24} />
-                                {profile.isOwn && (
+
+                            {profile.isOwn && (
+                                <HStack mt="20px">
+                                    <IoWalletOutline color="teal" size={24} />
                                     <Text>{profile.wallet + " RM"}</Text>
-                                )}
-                                <Button
-                                    size={"xs"}
-                                    colorScheme={"teal"}
-                                    onClick={() => {
-                                        setIsVisibleTopupModal(true);
-                                    }}
-                                >
-                                    Top-up
-                                </Button>
-                            </HStack>
+                                    <Button
+                                        size={"xs"}
+                                        colorScheme={"teal"}
+                                        onClick={() => {
+                                            setIsVisibleTopupModal(true);
+                                        }}
+                                    >
+                                        Top-up
+                                    </Button>
+                                </HStack>
+                            )}
                         </VStack>
                     </Flex>
                     <ListingsDisplay userId={profile.id} />
