@@ -13,8 +13,6 @@ import {
 } from "@chakra-ui/react";
 import { trpc } from "@src/utils/trpc";
 import { ChangeEvent, useState } from "react";
-import { ProductGrid } from "@src/components/ProductGrid";
-import { ProductCard } from "@src/components/ProductCard";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 const Home: NextPage = () => {

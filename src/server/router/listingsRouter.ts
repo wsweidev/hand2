@@ -35,7 +35,7 @@ export const listingsRouter = createRouter()
         }),
         async resolve({ input, ctx }) {
             const userId = ctx.session?.user!.id!;
-            const productToDb = await prisma.listing.create({
+            const listingToDb = await prisma.listing.create({
                 data: {
                     userId: userId,
                     expires: input.expires,
