@@ -197,6 +197,11 @@ const Listing = () => {
 
     return (
         <>
+            {listingQuery.isLoading && (
+                <Center fontWeight={"semibold"} fontSize={"2xl"} h="400px">
+                    {"Loading..."}
+                </Center>
+            )}
             {!!receiverId && (
                 <MessageModal
                     isVisible={isShowMessageModal}

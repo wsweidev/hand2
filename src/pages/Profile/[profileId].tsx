@@ -71,6 +71,11 @@ const Profile: NextPage = () => {
                         profileQuery.refetch();
                     }}
                 />
+                {profileQuery.isLoading && (
+                    <Center fontWeight={"semibold"} fontSize={"2xl"} h="400px">
+                        {"Loading..."}
+                    </Center>
+                )}
                 <Flex direction={"column"}>
                     <Flex
                         direction={"column"}
