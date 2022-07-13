@@ -21,6 +21,7 @@ import { IoWalletOutline } from "react-icons/io5";
 import TopupModal from "@src/components/TopupModal";
 import RatingModal from "@src/components/RatingModal";
 import { useSession } from "next-auth/react";
+import MessageModal from "@src/components/MessageModal";
 
 const Profile: NextPage = () => {
     const router = useRouter();
@@ -28,6 +29,7 @@ const Profile: NextPage = () => {
     const { profileId } = router.query as { profileId: string };
     const [isVisibleTopupModal, setIsVisibleTopupModal] = useState(false);
     const [isVisibleRatingModal, setIsVisibleRatingModal] = useState(false);
+    const [isShowMessageModal, setIsShowMessageModal] = useState(false);
 
     const profileQuery = trpc.useQuery(
         ["profiles.getProfileById", { id: profileId }],
@@ -50,6 +52,20 @@ const Profile: NextPage = () => {
     if (profile) {
         return (
             <>
+                {!!profile && (
+                    <MessageModal
+                        isVisible={isShowMessageModal}
+                        onClose={() => {
+                            setIsShowMessageModal(false);
+                        }}
+                        onSave={() => {
+                            setIsShowMessageModal(false);
+                            router.push("/Chat");
+                        }}
+                        receiverId={profile.id!}
+                    />
+                )}
+
                 <TopupModal
                     isVisible={isVisibleTopupModal}
                     onClose={() => {
@@ -129,7 +145,7 @@ const Profile: NextPage = () => {
                                 </Button>
                             </Flex>
 
-                            {profile.isOwn && (
+                            {profile.isOwn ? (
                                 <HStack mt="20px">
                                     <IoWalletOutline color="teal" size={24} />
                                     <Text>{profile.wallet + " RM"}</Text>
@@ -143,6 +159,17 @@ const Profile: NextPage = () => {
                                         Top-up
                                     </Button>
                                 </HStack>
+                            ) : (
+                                <Button
+                                    mt="20px"
+                                    size={"xs"}
+                                    colorScheme={"teal"}
+                                    onClick={() => {
+                                        setIsShowMessageModal(true);
+                                    }}
+                                >
+                                    Chat
+                                </Button>
                             )}
                         </VStack>
                     </Flex>

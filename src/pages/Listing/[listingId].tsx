@@ -25,6 +25,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { FaDollarSign, FaRegMoneyBillAlt, FaRegUser } from "react-icons/fa";
 import { GiTakeMyMoney } from "react-icons/gi";
+import { IoIosAlert } from "react-icons/io";
 
 const Listing = () => {
     const session = useSession();
@@ -253,6 +254,12 @@ const Listing = () => {
                         <Heading fontSize={["lg", "xl"]} mt="10px">
                             {listing.name}
                         </Heading>
+                        <HStack mt={4}>
+                            <IoIosAlert color="teal" />
+
+                            <Text fontWeight="semibold">{"Status: "}</Text>
+                            <Text>{listing.status?.toUpperCase()}</Text>
+                        </HStack>
 
                         <HStack mt={4}>
                             {listing.type === "bid" ? (

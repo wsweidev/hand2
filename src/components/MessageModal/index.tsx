@@ -111,15 +111,17 @@ const MessageModal = (props: MessageModalProps) => {
                 <ModalHeader>Send Message</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody pb={6}>
-                    <Flex direction="row" alignItems={"center"}>
-                        <FormLabel>{"Mention Listing"}</FormLabel>
-                        <Checkbox
-                            checked={includeListing}
-                            onChange={(e) => {
-                                setIncludeListing(e.target.checked);
-                            }}
-                        />
-                    </Flex>
+                    {!!props.listing && (
+                        <Flex direction="row" alignItems={"center"}>
+                            <FormLabel>{"Mention Listing"}</FormLabel>
+                            <Checkbox
+                                checked={includeListing}
+                                onChange={(e) => {
+                                    setIncludeListing(e.target.checked);
+                                }}
+                            />
+                        </Flex>
+                    )}
                     <FormControl isRequired>
                         <FormLabel>Message</FormLabel>
                         <AutoResizeTextarea

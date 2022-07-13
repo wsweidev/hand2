@@ -24,6 +24,7 @@ import {
     useColorModeValue,
     Avatar,
 } from "@chakra-ui/react";
+import { IoIosAlert } from "react-icons/io";
 import { trpc } from "@src/utils/trpc";
 import { ChangeEvent, useState } from "react";
 import { FaDollarSign, FaRegMoneyBillAlt } from "react-icons/fa";
@@ -40,6 +41,7 @@ type ListingsDisplayProps = {
 };
 
 const ListingsDisplay = ({ userId }: ListingsDisplayProps) => {
+    const session = useSession();
     const [listingsType, setListingsType] = useState<"all" | "bid" | "sell">(
         "all"
     );
@@ -68,12 +70,19 @@ const ListingsDisplay = ({ userId }: ListingsDisplayProps) => {
 
         const passesIdFilter = !userId || listing.userId === userId;
 
+        const passesStatusFilter =
+            listing.userId === session.data?.user?.id ||
+            listing.status === "listed" ||
+            listing.soldToId === session.data?.user?.id ||
+            listing.highestBidderId === session.data?.user?.id;
+
         return (
             passesIdFilter &&
             passesSearchFilter &&
             passesTypeFilter &&
             passesExpiryFilter &&
-            passesPriceFilter
+            passesPriceFilter &&
+            passesStatusFilter
         );
     });
 
@@ -223,7 +232,12 @@ const ListingCard = ({ listing }: listingCardProps) => {
             <Heading fontSize={["lg", "xl"]} mt="10px">
                 {listing.name}
             </Heading>
+            <HStack mt={4}>
+                <IoIosAlert color="teal" />
 
+                <Text fontWeight="semibold">{"Status: "}</Text>
+                <Text>{listing.status?.toUpperCase()}</Text>
+            </HStack>
             <HStack mt={4}>
                 {listing.type === "bid" ? (
                     <GiTakeMyMoney color="teal" />

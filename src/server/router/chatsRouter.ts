@@ -40,7 +40,7 @@ export const chatsRouter = createRouter()
                         { senderId: { equals: userId } },
                     ],
                 },
-                orderBy: { createdAt: "asc" },
+                orderBy: { createdAt: "desc" },
             });
 
             const groupedChats = groupBy(chats, (chat) =>
