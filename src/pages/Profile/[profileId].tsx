@@ -22,12 +22,14 @@ import TopupModal from "@src/components/TopupModal";
 import RatingModal from "@src/components/RatingModal";
 import { useSession } from "next-auth/react";
 import MessageModal from "@src/components/MessageModal";
+import WithdrawModal from "@src/components/WithdrawModal";
 
 const Profile: NextPage = () => {
     const router = useRouter();
     const session = useSession();
     const { profileId } = router.query as { profileId: string };
     const [isVisibleTopupModal, setIsVisibleTopupModal] = useState(false);
+    const [isVisibleWithdrawModal, setIsVisibleWithdrawModal] = useState(false);
     const [isVisibleRatingModal, setIsVisibleRatingModal] = useState(false);
     const [isShowMessageModal, setIsShowMessageModal] = useState(false);
 
@@ -73,6 +75,16 @@ const Profile: NextPage = () => {
                     }}
                     onSave={() => {
                         setIsVisibleTopupModal(false);
+                        profileQuery.refetch();
+                    }}
+                />
+                <WithdrawModal
+                    isVisible={isVisibleWithdrawModal}
+                    onClose={() => {
+                        setIsVisibleWithdrawModal(false);
+                    }}
+                    onSave={() => {
+                        setIsVisibleWithdrawModal(false);
                         profileQuery.refetch();
                     }}
                 />
@@ -157,6 +169,15 @@ const Profile: NextPage = () => {
                                         }}
                                     >
                                         Top-up
+                                    </Button>
+                                    <Button
+                                        size={"xs"}
+                                        colorScheme={"teal"}
+                                        onClick={() => {
+                                            setIsVisibleWithdrawModal(true);
+                                        }}
+                                    >
+                                        Withdraw
                                     </Button>
                                 </HStack>
                             ) : (

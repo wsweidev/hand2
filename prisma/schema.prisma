@@ -128,7 +128,7 @@ model User {
     image              String?
     accounts           Account[]
     sessions           Session[]
-    wallet             Int           @default(0)
+    wallet             Float         @default(0)
     listings           Listing[]     @relation("OwnListings")
     bids               Bid[]
     transactions       Transaction[]

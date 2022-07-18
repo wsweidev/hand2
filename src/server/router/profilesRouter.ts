@@ -58,6 +58,30 @@ export const profilesRouter = createRouter()
             return { success: true };
         },
     })
+    .mutation("withdraw", {
+        input: z.object({
+            amount: z.number(),
+        }),
+        async resolve({ input, ctx }) {
+            const userId = ctx.session?.user!.id!;
+            const owner = await prisma.user.findFirst({
+                where: { id: { equals: userId } },
+            });
+            if (!owner || !owner.id) {
+                throw new TRPCError({ code: "UNAUTHORIZED" });
+            } else if (owner.wallet < input.amount) {
+                throw new TRPCError({ code: "FORBIDDEN" });
+            } else {
+                const topupToDb = await prisma.user.update({
+                    where: { id: userId },
+                    data: {
+                        wallet: { decrement: input.amount },
+                    },
+                });
+                return { success: true };
+            }
+        },
+    })
     .mutation("addRating", {
         input: z.object({
             receiverId: z.string(),

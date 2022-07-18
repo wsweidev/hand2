@@ -21,21 +21,21 @@ import { useState } from "react";
 
 import { trpc } from "@src/utils/trpc";
 
-type TopupModalProps = {
+type WithdrawModalProps = {
     isVisible: boolean;
     onClose: () => void;
     onSave: () => void;
 };
 
-const TopupModal = (props: TopupModalProps) => {
+const WithdrawModal = (props: WithdrawModalProps) => {
     const [amount, setAmount] = useState<number>(0);
     const toast = useToast();
 
-    const topUp = trpc.useMutation(["profiles.topup"], {
+    const withdraw = trpc.useMutation(["profiles.withdraw"], {
         onSuccess: () => {
             toast({
                 title: "Success",
-                description: "Topup was successful",
+                description: "Withdraw was successful",
                 status: "success",
                 duration: 4000,
                 isClosable: true,
@@ -46,7 +46,7 @@ const TopupModal = (props: TopupModalProps) => {
         onError: () => {
             toast({
                 title: "Error",
-                description: "Topup was not successful",
+                description: "Withdraw was not successful, or amount exceeds wallet amount",
                 status: "error",
                 duration: 4000,
                 isClosable: true,
@@ -73,7 +73,7 @@ const TopupModal = (props: TopupModalProps) => {
                 isClosable: true,
             });
         } else {
-            topUp.mutate({
+            withdraw.mutate({
                 amount,
             });
         }
@@ -94,7 +94,7 @@ const TopupModal = (props: TopupModalProps) => {
                 maxW={"85vw"}
                 pt={6}
             >
-                <ModalHeader>Topup Wallet</ModalHeader>
+                <ModalHeader>Withdraw from Wallet</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody pb={6}>
                     <FormControl isRequired>
@@ -118,9 +118,9 @@ const TopupModal = (props: TopupModalProps) => {
                         colorScheme="teal"
                         mr={3}
                         onClick={handleSave}
-                        isLoading={topUp.isLoading}
+                        isLoading={withdraw.isLoading}
                     >
-                        Top Up
+                        Withdraw
                     </Button>
                     <Button onClick={handleClose}>Cancel</Button>
                 </ModalFooter>
@@ -129,4 +129,4 @@ const TopupModal = (props: TopupModalProps) => {
     );
 };
 
-export default TopupModal;
+export default WithdrawModal;
