@@ -35,18 +35,22 @@ export const listingsRouter = createRouter()
         }),
         async resolve({ input, ctx }) {
             const userId = ctx.session?.user!.id!;
-            const listingToDb = await prisma.listing.create({
-                data: {
-                    userId: userId,
-                    expires: input.expires,
-                    name: input.name,
-                    description: input.description,
-                    price: input.price,
-                    type: input.type,
-                    mainImageUrl: input.mainImageUrl,
-                },
-            });
-            return { success: true };
+            if (!userId) {
+                throw new TRPCError({ code: "UNAUTHORIZED" });
+            } else {
+                const listingToDb = await prisma.listing.create({
+                    data: {
+                        userId: userId,
+                        expires: input.expires,
+                        name: input.name,
+                        description: input.description,
+                        price: input.price,
+                        type: input.type,
+                        mainImageUrl: input.mainImageUrl,
+                    },
+                });
+                return { success: true };
+            }
         },
     })
     .query("getListingById", {
