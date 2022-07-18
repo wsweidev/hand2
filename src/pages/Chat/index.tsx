@@ -348,6 +348,7 @@ const Chat: NextPage = () => {
                                 <Button
                                     colorScheme={"teal"}
                                     onClick={handleSave}
+                                    isLoading={sendMessageMutation.isLoading}
                                 >
                                     Send
                                 </Button>

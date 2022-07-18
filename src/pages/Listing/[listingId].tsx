@@ -381,6 +381,7 @@ const Listing = () => {
                                                 fontSize={"sm"}
                                                 m="2"
                                                 onClick={cancelListing}
+                                                isLoading={cancelListingMutation.isLoading}
                                             >
                                                 Cancel Listing
                                             </Button>
@@ -397,6 +398,7 @@ const Listing = () => {
                                                 fontSize={"sm"}
                                                 m="2"
                                                 onClick={confirmBid}
+                                                isLoading={finaliseBidMutation.isLoading}
                                             >
                                                 Confirm Bid
                                             </Button>
@@ -438,6 +440,7 @@ const Listing = () => {
                                                 flex={1}
                                                 m="2"
                                                 onClick={purchaseItem}
+                                                isLoading={purchaseMutation.isLoading}
                                             >
                                                 Purchase
                                             </Button>
@@ -464,6 +467,7 @@ const Listing = () => {
                                                 fontSize={"sm"}
                                                 colorScheme={"teal"}
                                                 onClick={addBid}
+                                                isLoading={addBidMutation.isLoading}
                                             >
                                                 Bid
                                             </Button>
