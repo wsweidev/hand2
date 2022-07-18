@@ -35,7 +35,10 @@ export const listingsRouter = createRouter()
         }),
         async resolve({ input, ctx }) {
             const userId = ctx.session?.user!.id!;
-            if (!userId) {
+            const owner = await prisma.user.findFirst({
+                where: { id: { equals: userId } },
+            });
+            if (!owner || !owner.id) {
                 throw new TRPCError({ code: "UNAUTHORIZED" });
             } else {
                 const listingToDb = await prisma.listing.create({
